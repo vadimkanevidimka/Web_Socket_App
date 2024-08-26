@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Messages</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.9/signalr.min.js"></script>
+</head>
+<body>
+    <h1>Messages in Real-time</h1>
+    <div id="messagesList"></div>
+
+    <script type="text/javascript">
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/ws")
+            .build();
+
+        connection.on("ReceiveMessage", (text, sequenceNumber, timestamp) => {
+            const p = document.createElement("p");
+            p.textContent = `- ${sequenceNumber} at [${new Date(timestamp).toUTCString()}] Message: ${text}`;
+            document.getElementById("messagesList").appendChild(p);
+        });
+
+        connection.start().catch(err => console.error(err));
+    </script>
+</body>
+</html>

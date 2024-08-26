@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message History</title>
+</head>
+<body>
+    <h1>Message History</h1>
+    <button id="loadHistory">Load Last 10 Minutes Messages</button>
+    <ul id="historyList"></ul>
+
+    <script>
+        document.getElementById("loadHistory").addEventListener("click", async function () {
+            const now = new Date();
+            const tenMinutesAgo = new Date(now.getTime() - 10 * 60000);
+
+            const from = tenMinutesAgo.toUTCString();
+            const to = now.toUTCString();
+
+            const response = await fetch(`http://localhost:5142/GetMessages?from=${from}&to=${to}`);
+            const messages = await response.json();
+
+            const historyList = document.getElementById("historyList");
+            historyList.innerHTML = '';
+
+            messages.forEach(message => {
+                const li = document.createElement("li");
+                li.textContent = `ID: ${message.id}| Sequence number: ${message.sequenceNumber} was sent at ${new Date(message.timestamp).toUTCString()} => ${message.text}`;
+                historyList.appendChild(li);
+            });
+        });
+    </script>
+</body>
+</html>

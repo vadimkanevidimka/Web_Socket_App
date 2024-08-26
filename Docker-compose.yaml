@@ -1,0 +1,39 @@
+# Файл docker-compose должен начинаться с тега версии.
+# Мы используем "3" так как это - самая свежая версия на момент написания этого кода.
+
+version: "3"
+
+services:
+
+  postgresql:
+
+    build: PG init/
+
+    networks:
+      - my-network
+
+    ports:
+      - 5432:5432
+
+  aspnet_client_server_application:
+
+    build: .
+
+    networks:
+      - my-network
+
+    command: dotnet run Koshelekpy_Test.dll
+
+    ports:
+      - 5142:8080
+
+    links:
+      - "postgresql:pg"
+
+    depends_on:
+      - postgresql
+
+networks:
+  my-network:
+    driver: bridge
+    

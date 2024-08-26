@@ -8,28 +8,20 @@ services:
   postgresql:
 
     build: PG init/
-
     networks:
       - my-network
-
     ports:
       - 5432:5432
 
   aspnet_client_server_application:
-
     build: .
-
     networks:
       - my-network
-
     command: dotnet run Koshelekpy_Test.dll
-
     ports:
       - 5142:8080
-
     links:
       - "postgresql:pg"
-
     depends_on:
       - postgresql
 
